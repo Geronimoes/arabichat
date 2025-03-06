@@ -95,13 +95,24 @@ arabichat/
    - Flask-based web application
    - User interface for text input and display
    - Form handling and validation
+   - Automatic conversion on paste
 
 2. **Transliteration Engine**
-   - Integration with CAMeL Tools
-   - Custom mapping rules for Arabica system
-   - Dialect-specific processing
+   - Character mapping system
+   - Dictionary-based approach for common words
+   - Customizable mapping rules
+   - Pattern-based conversion for special cases
 
-3. **Utility Services**
+3. **Correction System**
+   - Post-processing corrections for common errors
+   - Word-level, pattern-based, and suffix-based corrections
+   - Configurable via JSON files
+
+4. **Arabic Script Conversion**
+   - Experimental feature for converting Arabica to Arabic script
+   - Basic character mapping and contextual rules
+
+5. **Utility Services**
    - Configuration management
    - Logging and error handling
    - Export and file handling
@@ -111,15 +122,21 @@ arabichat/
 ### Primary Technologies
 
 - **Flask**: Web framework
-- **CAMeL Tools**: Arabic language processing
+- **Python**: Core programming language
+- **JSON**: Configuration and data storage
 - **Bootstrap**: Frontend UI components
 - **jQuery**: DOM manipulation and AJAX
 
-### Alternative/Complementary Libraries
+### Potential Additional Libraries
 
-- **PyArabic**: Alternative for basic Arabic text operations
-- **ArabicTransliterator**: Could be used for specific transliteration tasks
-- **arabizi**: Specific tools for Arabizi (Arabic chat) processing
+- **rapidfuzz**: Fuzzy string matching for dictionary lookups
+- **pyarabic**: Arabic text processing utilities
+- **NLTK/spaCy**: Natural language processing for morphological analysis
+- **CAMeL Tools**: Advanced Arabic language processing (optional, requires C++ dependencies)
+
+### Potential API Integration
+
+- **OpenAI/Anthropic/Mistral API**: LLM fallback for unknown words
 
 ## CAMeL Tools Integration
 

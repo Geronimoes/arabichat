@@ -2,20 +2,20 @@
 
 ## Original Requirements
 
-The primary goal of ArabiChat is to help a PhD student who is transcribing Moroccan Arabic dialect using chat language convert their transcriptions to formal academic transliteration for analysis and publication. Specifically:
+The primary goal of ArabiChat is to help with transcribing Moroccan Arabic dialect using chat language and convert these transcriptions to formal academic transliteration for analysis and publication. Specifically:
 
-1. The student uses Arabic chat alphabet (Arabizi) for transcribing Moroccan Arabic dialect
-2. The student needs to convert these transcriptions to formal academic transliteration (Arabica system)
-3. The process needs to be accessible and efficient, not requiring the student to learn academic transcription
+1. Input is Arabic chat alphabet (Arabizi) for transcribing Moroccan Arabic dialect
+2. Convert these transcriptions to formal academic transliteration (Arabica system)
+3. The process needs to be accessible and efficient, not requiring learning academic transcription
 
 ## Current Implementation Assessment
 
-The current implementation of ArabiChat successfully addresses these requirements through:
+The current implementation of ArabiChat addresses these requirements through:
 
 ### Strengths
 
 1. **Robust Transliteration Engine**:
-   - Successfully converts Arabic chat alphabet to Arabica transliteration
+   - Converts Arabic chat alphabet to Arabica transliteration
    - Handles capitalization appropriately
    - Preserves foreign words and loanwords
    - Handles special cases like definite articles
@@ -53,9 +53,7 @@ The current implementation of ArabiChat successfully addresses these requirement
    - Basic implementation without full diacritics
    - May not correctly handle complex orthographic rules
 
-## Addressing the PhD Student's Needs
-
-The current implementation effectively meets the core needs of the PhD student by:
+## Addressing Transcription Needs
 
 1. **Saving Time**:
    - Automating the conversion from chat alphabet to formal transliteration
@@ -122,8 +120,3 @@ To better address the requirements and improve the overall system:
    - Expand to other Arabic dialects
    - Add dialect detection and specific handling
 
-## Conclusion
-
-The current implementation of ArabiChat successfully addresses the core requirements of converting Moroccan Arabic chat text to academic transliteration. While there are areas for improvement, particularly in morphological analysis and context awareness, the system provides a solid foundation that can be extended and refined over time.
-
-The student can immediately benefit from the current implementation while future enhancements continue to improve accuracy and functionality.
