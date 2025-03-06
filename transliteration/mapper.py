@@ -32,6 +32,14 @@ except ImportError:
     CORRECTIONS_AVAILABLE = False
     logging.warning("Correction module not available. Skipping correction pass.")
 
+# Try to import LLM integration, but don't fail if not available
+try:
+    from transliteration.llm_integration import LLMFallbackTransliterator, LLMProvider
+    LLM_INTEGRATION_AVAILABLE = True
+except ImportError:
+    LLM_INTEGRATION_AVAILABLE = False
+    logging.warning("LLM integration not available. AI fallback will be disabled.")
+
 # Try to import CAMeL Tools, but don't fail if not available
 try:
     from camel_tools.utils.charmap import CharMapper
@@ -45,13 +53,19 @@ class TransliterationMapper:
     Main class for handling transliteration from Arabic chat to Arabica system.
     """
     
-    def __init__(self, custom_mapping_path: Optional[str] = None, fuzzy_threshold: int = 85):
+    def __init__(self, custom_mapping_path: Optional[str] = None, fuzzy_threshold: int = 85, 
+                 enable_llm_fallback: bool = False, llm_api_key: Optional[str] = None,
+                 llm_provider: str = 'openai', llm_model: Optional[str] = None):
         """
         Initialize the mapper with the appropriate character mappings.
         
         Args:
             custom_mapping_path: Path to custom mapping files
             fuzzy_threshold: Threshold for fuzzy matching (0-100)
+            enable_llm_fallback: Whether to enable LLM fallback for unknown words
+            llm_api_key: API key for LLM provider
+            llm_provider: LLM provider to use
+            llm_model: LLM model to use
         """
         self.logger = logging.getLogger(__name__)
         self.fuzzy_threshold = fuzzy_threshold
@@ -164,6 +178,21 @@ class TransliterationMapper:
         if ARABIC_UTILS_AVAILABLE:
             self.arabic_processor = ArabicProcessor()
             self.logger.info("Initialized Arabic processing module")
+            
+        # Initialize the LLM fallback if enabled
+        self.enable_llm_fallback = enable_llm_fallback and LLM_INTEGRATION_AVAILABLE
+        self.llm_transliterator = None
+        if self.enable_llm_fallback and llm_api_key:
+            try:
+                self.llm_transliterator = LLMFallbackTransliterator(
+                    provider=llm_provider,
+                    api_key=llm_api_key,
+                    model=llm_model
+                )
+                self.logger.info("Initialized LLM fallback transliterator")
+            except Exception as e:
+                self.logger.error(f"Error initializing LLM fallback: {str(e)}")
+                self.enable_llm_fallback = False
             
         # Arabic script mapping (for converting from Arabica to Arabic script)
         self.arabic_script_mapping = {
@@ -440,6 +469,24 @@ class TransliterationMapper:
                         result_tokens.append(fuzzy_value)
                         i += 1
                         continue
+                
+                # Try LLM fallback if enabled and available
+                if self.enable_llm_fallback and self.llm_transliterator:
+                    try:
+                        # Get surrounding context if available
+                        context = None
+                        if i > 0 and i < len(tokens) - 1:
+                            context_tokens = tokens[max(0, i-3):min(len(tokens), i+4)]
+                            context = ' '.join([t for t in context_tokens if t and not t.isspace()])
+                        
+                        llm_result = self.llm_transliterator.transliterate(token, context)
+                        if llm_result and llm_result != token:
+                            self.logger.info(f"LLM transliteration: {token} -> {llm_result}")
+                            result_tokens.append(llm_result)
+                            i += 1
+                            continue
+                    except Exception as e:
+                        self.logger.warning(f"LLM fallback error: {str(e)}")
                     
                 # Check if it's a loanword to preserve
                 if token_lower in self.loanwords or token_lower in self.foreign_words:

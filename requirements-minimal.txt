@@ -3,3 +3,4 @@ python-dotenv==1.0.0
 pytest==7.4.0
 rapidfuzz==3.6.1
 pyarabic==0.6.15
+requests>=2.31.0
