@@ -40,6 +40,22 @@ This document provides information for developers contributing to the ArabiChat 
    flask run --debug
    ```
 
+### Using Docker for Development
+
+Docker provides a consistent environment with all dependencies pre-installed, including CAMeL Tools.
+
+1. Build and start the Docker container:
+   ```bash
+   docker-compose up --build
+   ```
+
+2. For development with live reload:
+   ```bash
+   docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+   ```
+
+The application will be available at http://localhost:5000.
+
 ## Project Architecture
 
 ### Project Structure

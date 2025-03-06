@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial repository structure
 - Project documentation (README.md, TODO.md, README-DEV.md, CHANGELOG.md)
 - Project planning and development roadmap
+- Basic Flask application structure with templates and static assets
+- Core transliteration mapper with fallback implementation
+- Docker configuration for easier deployment and development
+- Support for running without CAMeL Tools dependency
 
 ## [0.1.0] - YYYY-MM-DD (Template for future use)
 

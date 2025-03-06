@@ -8,6 +8,7 @@ import json
 import logging
 from typing import Dict, List, Optional, Tuple, Set
 
+# Try to import CAMeL Tools, but don't fail if not available
 try:
     from camel_tools.utils.charmap import CharMapper
     CAMEL_TOOLS_AVAILABLE = True
@@ -118,25 +119,28 @@ class TransliterationMapper:
         
         # Create directory if it doesn't exist
         if not os.path.exists(search_path):
-            os.makedirs(search_path)
-            
-            # Create default Moroccan mapping file
-            moroccan_path = os.path.join(search_path, 'moroccan.json')
-            with open(moroccan_path, 'w') as f:
-                json.dump({
-                    "name": "Moroccan Arabic",
-                    "description": "Mapping for Moroccan Arabic dialect features",
-                    "mappings": {
-                        "g": "g",  # In Moroccan, qaf is often pronounced as g
-                        "v": "v",  # For loan words in Moroccan
-                        "p": "p"   # For loan words in Moroccan
-                    },
-                    "patterns": [
-                        # Examples of Moroccan-specific patterns
-                        {"pattern": "sh", "replacement": "š"},
-                        {"pattern": "ch", "replacement": "š"}
-                    ]
-                }, f, indent=2)
+            try:
+                os.makedirs(search_path)
+                
+                # Create default Moroccan mapping file
+                moroccan_path = os.path.join(search_path, 'moroccan.json')
+                with open(moroccan_path, 'w') as f:
+                    json.dump({
+                        "name": "Moroccan Arabic",
+                        "description": "Mapping for Moroccan Arabic dialect features",
+                        "mappings": {
+                            "g": "g",  # In Moroccan, qaf is often pronounced as g
+                            "v": "v",  # For loan words in Moroccan
+                            "p": "p"   # For loan words in Moroccan
+                        },
+                        "patterns": [
+                            # Examples of Moroccan-specific patterns
+                            {"pattern": "sh", "replacement": "š"},
+                            {"pattern": "ch", "replacement": "š"}
+                        ]
+                    }, f, indent=2)
+            except Exception as e:
+                self.logger.warning(f"Could not create mapping directory: {str(e)}")
         
         # Load all mapping files
         try:
@@ -165,11 +169,11 @@ class TransliterationMapper:
         if not text:
             return ""
             
-        # If CAMeL Tools is available, use it for the conversion
-        if CAMEL_TOOLS_AVAILABLE:
-            return self._convert_with_camel(text, dialect)
-        else:
-            return self._convert_fallback(text, dialect)
+        # Always use the fallback for now, CAMeL Tools integration will be added later
+        # if CAMEL_TOOLS_AVAILABLE:
+        #     return self._convert_with_camel(text, dialect)
+        # else:
+        return self._convert_fallback(text, dialect)
     
     def _convert_with_camel(self, text: str, dialect: str) -> str:
         """

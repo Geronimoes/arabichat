@@ -32,11 +32,34 @@ cd arabichat
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
-# Install dependencies
-pip install -r requirements.txt
+# Install basic dependencies (without CAMeL Tools)
+pip install -r requirements-minimal.txt
 
 # Run the application
 python app.py
+```
+
+### Installation Notes
+
+#### CAMeL Tools Installation
+
+CAMeL Tools provides advanced Arabic language processing capabilities, but it can be difficult to install on Windows due to C++ dependencies. The application provides a fallback implementation that works without CAMeL Tools.
+
+If you want to use CAMeL Tools (recommended for production):
+
+**Option 1: Use a Docker container**
+- This is the simplest approach if you have Docker installed
+- Instructions for Docker setup will be added soon
+
+**Option 2: Install on Linux (or WSL)**
+- CAMeL Tools installs more easily on Linux systems
+- You can use Windows Subsystem for Linux (WSL) to create a Linux environment on Windows
+
+**Option 3: Advanced Windows installation**
+- Requires Visual Studio Build Tools with C++ workload
+- May require additional configuration due to package dependencies
+```
+pip install camel-tools
 ```
 
 Then open your browser to `http://localhost:5000`.

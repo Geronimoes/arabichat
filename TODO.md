@@ -6,15 +6,20 @@ This document outlines the planned development tasks for the ArabiChat project.
 
 ### Project Structure
 - [x] Initialize repository
-- [ ] Create basic Flask application structure
-- [ ] Set up virtual environment and requirements.txt
-- [ ] Create basic templates and static files
+- [x] Create basic Flask application structure
+- [x] Set up virtual environment and requirements files
+- [x] Create basic templates and static files
 
 ### Core Conversion Functionality
-- [ ] Install and integrate CAMeL Tools
-- [ ] Implement basic Arabic chat to Arabic script conversion
+- [x] Implement fallback character mapping system
+- [x] Create mapping from Arabic chat to Arabica transliteration
+- [x] Implement character mapping validation
+- [ ] Add Docker setup for easier deployment
+
+### CAMeL Tools Integration (Optional)
+- [ ] Create Docker container with CAMeL Tools
+- [ ] Implement Arabic chat to Arabic script conversion using CAMeL
 - [ ] Create mapping from Arabic script to Arabica transliteration
-- [ ] Implement character mapping validation
 
 ### Basic UI
 - [ ] Create simple input form for text conversion

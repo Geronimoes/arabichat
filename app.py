@@ -4,7 +4,12 @@ ArabiChat - A web application for Arabic chat to academic transliteration conver
 
 from flask import Flask, render_template, request, jsonify
 import os
+import logging
+from datetime import datetime
 from transliteration.mapper import TransliterationMapper
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -15,7 +20,7 @@ mapper = TransliterationMapper()
 @app.route('/')
 def index():
     """Render the main application page."""
-    return render_template('index.html')
+    return render_template('index.html', current_year=datetime.now().year)
 
 @app.route('/convert', methods=['POST'])
 def convert():
@@ -45,7 +50,7 @@ def convert():
 @app.route('/help')
 def help_page():
     """Render the help documentation page."""
-    return render_template('help.html')
+    return render_template('help.html', current_year=datetime.now().year)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
