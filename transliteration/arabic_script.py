@@ -5,6 +5,13 @@ This is an experimental feature and provides only basic conversion.
 
 import re
 
+# Try to import our Arabic processor
+try:
+    from transliteration.arabic_utils import ArabicProcessor, PYARABIC_AVAILABLE
+    ARABIC_PROCESSOR_AVAILABLE = True
+except ImportError:
+    ARABIC_PROCESSOR_AVAILABLE = False
+
 # Mapping from Arabica transliteration to Arabic script
 ARABICA_TO_ARABIC = {
     # Consonants
@@ -91,6 +98,15 @@ def to_arabic_script(text):
     """
     if not text:
         return ""
+    
+    # Use the more sophisticated ArabicProcessor if available
+    if ARABIC_PROCESSOR_AVAILABLE:
+        try:
+            processor = ArabicProcessor()
+            return processor.convert_arabica_to_arabic(text)
+        except Exception as e:
+            # Fall back to basic implementation if processor fails
+            print(f"Error using ArabicProcessor: {e}")
     
     # Apply special patterns first
     for pattern, replacement in SPECIAL_PATTERNS:

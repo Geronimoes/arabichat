@@ -153,6 +153,18 @@ class TransliterationMapper:
             self.corrector = TransliterationCorrector()
             self.logger.info("Initialized correction module")
             
+        # Initialize the fuzzy matcher if available
+        self.fuzzy_matcher = None
+        if FUZZY_MATCHING_AVAILABLE:
+            self.fuzzy_matcher = FuzzyMatcher(default_threshold=self.fuzzy_threshold)
+            self.logger.info("Initialized fuzzy matching module")
+            
+        # Initialize the Arabic processor if available
+        self.arabic_processor = None
+        if ARABIC_UTILS_AVAILABLE:
+            self.arabic_processor = ArabicProcessor()
+            self.logger.info("Initialized Arabic processing module")
+            
         # Arabic script mapping (for converting from Arabica to Arabic script)
         self.arabic_script_mapping = {
             'ʾ': 'ء',
@@ -414,6 +426,20 @@ class TransliterationMapper:
                     result_tokens.append(transliteration)
                     i += 1
                     continue
+                
+                # Try fuzzy matching if exact match fails
+                if self.fuzzy_matcher is not None:
+                    fuzzy_match, fuzzy_value, score = self.fuzzy_matcher.find_match(
+                        token_lower, self.common_words
+                    )
+                    if fuzzy_value:
+                        self.logger.debug(f"Fuzzy match: {token_lower} -> {fuzzy_match} (score: {score})")
+                        # Preserve capitalization
+                        if token[0].isupper() and len(fuzzy_value) > 0:
+                            fuzzy_value = fuzzy_value[0].upper() + fuzzy_value[1:]
+                        result_tokens.append(fuzzy_value)
+                        i += 1
+                        continue
                     
                 # Check if it's a loanword to preserve
                 if token_lower in self.loanwords or token_lower in self.foreign_words:
