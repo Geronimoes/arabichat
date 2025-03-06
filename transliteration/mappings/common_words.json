@@ -1,0 +1,33 @@
+{
+  "description": "Common Moroccan Arabic words with correct Arabica transliteration",
+  "words": {
+    "salam": "salām",
+    "3likom": "ʿlikum",
+    "bikhir": "biḫīr",
+    "sa7bi": "ṣāḥbi",
+    "sahbi": "ṣāḥbi",
+    "daba": "daba",
+    "wach": "wāš",
+    "wahed": "wāḥed",
+    "wahd": "wāḥd",
+    "khouk": "ḫūk",
+    "khtek": "ḫtek",
+    "safi": "sāfi",
+    "nchallah": "inšāʾallāh",
+    "inchallah": "inšāʾallāh",
+    "nshallah": "inšāʾallāh",
+    "shukran": "šukran",
+    "habibi": "ḥabībi",
+    "7bibi": "ḥbībi",
+    "bslama": "bi-salāma",
+    "smahli": "smāḥ lī",
+    "bghit": "bġīt",
+    "bgit": "bġīt",
+    "kif": "kīf",
+    "kifach": "kīfāš",
+    "kifash": "kīfāš",
+    "labas": "lā bās",
+    "makayn": "mā kāyn",
+    "mashi": "māšī"
+  }
+}
