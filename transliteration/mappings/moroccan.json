@@ -9,15 +9,11 @@
     "3": "ʿ",
     "5": "ḫ",
     "7": "ḥ",
-    "9": "q",
-    "D": "ḍ",
-    "S": "ṣ",
-    "T": "ṭ",
-    "Z": "ẓ"
+    "9": "q"
   },
   "patterns": [
-    {"pattern": "sh", "replacement": "š"},
     {"pattern": "ch", "replacement": "š"},
+    {"pattern": "sh", "replacement": "š"},
     {"pattern": "th", "replacement": "ṯ"},
     {"pattern": "dh", "replacement": "ḏ"},
     {"pattern": "gh", "replacement": "ġ"},
@@ -26,28 +22,20 @@
     {"pattern": "ee", "replacement": "ī"},
     {"pattern": "ii", "replacement": "ī"},
     {"pattern": "oo", "replacement": "ū"},
-    {"pattern": "uu", "replacement": "ū"}
+    {"pattern": "uu", "replacement": "ū"},
+    {"pattern": "wa ", "replacement": "wa "},
+    {"pattern": "fi ", "replacement": "fī "}
   ],
-  "specialRules": [
-    {
-      "description": "Definite article",
-      "pattern": "\\bal[ -]([a-zA-Z])",
-      "replacement": "al-$1"
-    },
-    {
-      "description": "Taa marbutah at end of word",
-      "pattern": "a_t\\b",
-      "replacement": "a"
-    },
-    {
-      "description": "Taa marbutah in construct state",
-      "pattern": "a_t ([\\w])",
-      "replacement": "at $1"
-    }
-  ],
-  "notes": [
-    "Moroccan Arabic often pronounces ق (qaf) as g, which is preserved in the transliteration",
-    "French and Spanish loanwords may include sounds like p and v which are kept in the transliteration",
-    "The Arabica system represents emphatic consonants with dots below the letter"
-  ]
+  "common_words": {
+    "salam": "salām",
+    "slm": "salām",
+    "wach": "waš",
+    "daba": "daba",
+    "safi": "sāfī",
+    "mazal": "māzāl",
+    "sma7": "smaḥ",
+    "chkran": "škran",
+    "mochkil": "moškil",
+    "wach": "waš"
+  }
 }

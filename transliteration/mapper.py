@@ -41,7 +41,7 @@ class TransliterationMapper:
             '8': 'q',  # qaf (alternative in some systems)
             '9': 'q',  # qaf
             
-            # Emphatic consonants (lowercase only to avoid casing issues)
+            # Basic consonants with regular and emphatic versions
             'd': 'd',
             'D': 'ḍ',  # emphatic d when explicitly capitalized mid-word
             's': 's',
@@ -51,7 +51,7 @@ class TransliterationMapper:
             'z': 'z',
             'Z': 'ẓ',  # emphatic z when explicitly capitalized mid-word
             
-            # Basic consonants
+            # Other basic consonants
             'b': 'b',
             'f': 'f',
             'g': 'g',  # Used in Moroccan Arabic
@@ -64,7 +64,6 @@ class TransliterationMapper:
             'r': 'r',
             'w': 'w',
             'y': 'y',
-        }
         }
         
         # Multi-character sequences
@@ -306,75 +305,75 @@ class TransliterationMapper:
         Returns:
             The text converted to Arabica transliteration
         """
-        # Process the text through various transformation stages
+        if not text:
+            return ""
+            
+        # Process by splitting into tokens (words and punctuation)
+        tokens = re.findall(r'\b\w+\b|\S|\s+', text)
+        result_tokens = []
         
-        # Split the text into words for word-level processing
-        words = re.findall(r'\b\w+\b|\S+', text)
-        result_words = []
-        
-        for word in words:
-            # Check if it's a common word with a predefined transliteration
-            word_lower = word.lower()
-            if word_lower in self.common_words:
-                # Apply capitalization if the original word was capitalized
-                if word[0].isupper() and len(word) > 1:
-                    result_words.append(self.common_words[word_lower].capitalize())
-                else:
-                    result_words.append(self.common_words[word_lower])
-                continue
-                
-            # Check if it's a foreign word that should be preserved
-            if word_lower in self.foreign_words or any(word_lower.startswith(f) for f in ['l\'', 'el-']):
-                result_words.append(word)
-                continue
-                
-            # Proceed with character-by-character transliteration
-            processed_word = word
+        i = 0
+        while i < len(tokens):
+            token = tokens[i]
             
-            # 1. Apply digraphs first (they should take precedence)
-            for chat, arabica in self.digraphs:
-                processed_word = processed_word.lower().replace(chat, arabica)
-                # Also handle capitalized versions
-                cap_chat = chat.capitalize()
-                processed_word = processed_word.replace(cap_chat, arabica.capitalize())
-            
-            # 2. Apply dialect-specific patterns if available
-            if dialect in self.dialect_mappings:
-                patterns = self.dialect_mappings[dialect].get('patterns', [])
-                for pattern_info in patterns:
-                    pattern = pattern_info.get('pattern', '')
-                    replacement = pattern_info.get('replacement', '')
-                    if pattern and replacement:
-                        processed_word = processed_word.replace(pattern, replacement)
-            
-            # 3. Apply vowel mappings
-            for chat, arabica in self.vowels:
-                processed_word = processed_word.replace(chat, arabica)
-            
-            # 4. Apply single character mappings
-            result_chars = []
-            i = 0
-            while i < len(processed_word):
-                char = processed_word[i]
-                if char in self.base_mapping:
-                    result_chars.append(self.base_mapping[char])
-                else:
-                    # Check dialect-specific mappings
-                    if (dialect in self.dialect_mappings and 
-                        'mappings' in self.dialect_mappings[dialect] and
-                        char in self.dialect_mappings[dialect]['mappings']):
-                        result_chars.append(self.dialect_mappings[dialect]['mappings'][char])
-                    else:
-                        result_chars.append(char)
+            # Skip whitespace tokens
+            if token.isspace():
+                result_tokens.append(token)
                 i += 1
-            
-            processed_word = ''.join(result_chars)
-            result_words.append(processed_word)
+                continue
+                
+            # Check if it's a word (not punctuation)
+            if re.match(r'\w+', token):
+                # Check if it's a common word with a predefined transliteration
+                token_lower = token.lower()
+                if token_lower in self.common_words:
+                    # Use the predefined transliteration
+                    transliteration = self.common_words[token_lower]
+                    # Preserve capitalization
+                    if token[0].isupper() and len(transliteration) > 0:
+                        transliteration = transliteration[0].upper() + transliteration[1:]
+                    result_tokens.append(transliteration)
+                    i += 1
+                    continue
+                    
+                # Check if it's a loanword to preserve
+                if token_lower in self.loanwords or token_lower in self.foreign_words:
+                    result_tokens.append(token)
+                    i += 1
+                    continue
+                    
+                # Check if it matches foreign word patterns
+                is_foreign = False
+                for pattern in self.foreign_word_patterns:
+                    if re.match(pattern, token):
+                        is_foreign = True
+                        break
+                if is_foreign:
+                    result_tokens.append(token)
+                    i += 1
+                    continue
+                
+                # Check if it's a special case like l'prix or l-prix
+                if i < len(tokens) - 1 and token.lower() in ['l', 'el'] and tokens[i+1] in ["'", "-"]:
+                    # French article or definite article with apostrophe/hyphen
+                    result_tokens.append(token)
+                    result_tokens.append(tokens[i+1])
+                    i += 2
+                    continue
+                
+                # Process the word character by character, with special handling for first letter
+                processed_token = self._process_word(token, dialect)
+                result_tokens.append(processed_token)
+            else:
+                # It's punctuation or something else, keep as is
+                result_tokens.append(token)
+                
+            i += 1
         
-        # Combine words back into text
-        result = ' '.join(result_words)
+        # Join the results
+        result = ''.join(result_tokens)
         
-        # 5. Post-processing for specific Arabica rules
+        # Post-processing for specific Arabica rules
         
         # Handle definite article (al-)
         result = re.sub(r'\bal[ -]([a-zA-Z])', r'al-\1', result)
@@ -383,7 +382,71 @@ class TransliterationMapper:
         result = re.sub(r'a_t\b', 'a', result)  # End of word
         result = re.sub(r'a_t ([\w])', r'at \1', result)  # Before a word (construct state)
         
-        # Preserve punctuation
-        result = re.sub(r'([^\w\s])\s+([^\w\s])', r'\1\2', result)
+        return result
         
+    def _process_word(self, word: str, dialect: str) -> str:
+        """
+        Process a single word for transliteration.
+        
+        Args:
+            word: The word to process
+            dialect: The dialect to use
+            
+        Returns:
+            The processed word
+        """
+        # Special case for first letter capitalization
+        is_first_cap = word[0].isupper() if word else False
+        
+        # 1. Apply digraphs first (they should take precedence)
+        # We need to handle capitalized digraphs specially
+        processed = word
+        for chat, arabica in self.digraphs:
+            # Case-sensitive replacements for digraphs
+            processed = processed.replace(chat, arabica)
+        
+        # 2. Apply dialect-specific patterns if available
+        if dialect in self.dialect_mappings:
+            patterns = self.dialect_mappings[dialect].get('patterns', [])
+            for pattern_info in patterns:
+                pattern = pattern_info.get('pattern', '')
+                replacement = pattern_info.get('replacement', '')
+                if pattern and replacement:
+                    processed = processed.replace(pattern, replacement)
+        
+        # 3. Apply vowel mappings
+        for chat, arabica in self.vowels:
+            processed = processed.replace(chat, arabica)
+        
+        # 4. Apply single character mappings with special handling for first letter
+        result = ""
+        for i, char in enumerate(processed):
+            # Special handling for capitalized first letter
+            if i == 0 and is_first_cap:
+                # Don't apply emphatic mapping to capitalized first letter
+                # Instead, map to regular consonant and keep capitalized
+                if char.lower() in ['s', 'd', 't', 'z']:
+                    result += char.lower()
+                elif char.lower() in self.base_mapping:
+                    # Get mapping and preserve capitalization
+                    mapped = self.base_mapping[char.lower()]
+                    result += mapped.upper() if mapped.isalpha() else mapped
+                else:
+                    result += char
+            # Regular mapping for all other characters
+            elif char in self.base_mapping:
+                result += self.base_mapping[char]
+            # Dialect-specific mapping
+            elif (dialect in self.dialect_mappings and 
+                'mappings' in self.dialect_mappings[dialect] and 
+                char in self.dialect_mappings[dialect]['mappings']):
+                result += self.dialect_mappings[dialect]['mappings'][char]
+            # No mapping, keep as is
+            else:
+                result += char
+        
+        # Re-capitalize first letter if needed
+        if is_first_cap and result and not result[0].isupper() and result[0].isalpha():
+            result = result[0].upper() + result[1:]
+            
         return result

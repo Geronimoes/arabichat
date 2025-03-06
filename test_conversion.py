@@ -1,36 +1,42 @@
 """
-Quick test script for the transliteration mapper.
+Test script to evaluate the transliteration of Arabic chat to Arabica.
 """
 
 from transliteration.mapper import TransliterationMapper
 
-def main():
+def test_transliteration():
+    """Test the transliteration with various examples."""
     mapper = TransliterationMapper()
     
-    # Test texts from the examples
-    test_texts = [
-        # Test Text 1
-        "Salam 3likom, kidayr a sa7bi? Wach kolchi bikhir?\nLbar7 kont f su9 w tla9it m3a wahd sahibna, gal liya 3la chi khbr mzyan!\nYalah jibi 7aja nshrboha f café, kayn chi mochkila?",
+    # Test cases
+    test_cases = [
+        # Test 1: General Conversation
+        "Salam 3likom, kidayr a sa7bi? Wach kolchi bikhir?",
+        "Lbar7 kont f su9 w tla9it m3a wahd sahibna, gal liya 3la chi khbr mzyan!",
+        "Yalah jibi 7aja nshrboha f café, kayn chi mochkila?",
         
-        # Test Text 2
-        "Ch7al f had l'prix? 3afak goliya wach hadchi normal?\nKhasni chi haja pour mon projet, mais ma3rfch mnin njibha!\nRani tired bzaf, kantfkr nji l'3tla nchoufkom!",
+        # Test 2: Casual Chat with Mixed English & French Words
+        "Ch7al f had l'prix? 3afak goliya wach hadchi normal?",
+        "Khasni chi haja pour mon projet, mais ma3rfch mnin njibha!",
+        "Rani tired bzaf, kantfkr nji l'3tla nchoufkom!",
         
-        # Test Text 3
-        "Fink a zin? Wach mazal 3ndek dakchi lli golti?\nSma7 liya a khti, rani mchghoul daba, ndir lik call mn b3d inchallah!\nMachi mochkil, nchofkom m3a l3achiya!",
+        # Test 3: More Dialectal Expressions & Shortcuts
+        "Fink a zin? Wach mazal 3ndek dakchi lli golti?",
+        "Sma7 liya a khti, rani mchghoul daba, ndir lik call mn b3d inchallah!",
+        "Machi mochkil, nchofkom m3a l3achiya!",
         
-        # Test Text 4
-        "Hadi chi 9adia kbira, 3ad fhmto daba!\nSafi, rani 7ader, yalah ndiro chi planning l had lyoum.\nDaba ghadi nmchi l 7omm lqdim bach nchouf chi 7wayj."
+        # Test 4: Spoken Moroccan Chat with Abbreviations & Numbers
+        "Hadi chi 9adia kbira, 3ad fhmto daba!",
+        "Safi, rani 7ader, yalah ndiro chi planning l had lyoum.",
+        "Daba ghadi nmchi l 7omm lqdim bach nchouf chi 7wayj."
     ]
     
-    # Convert each test text
-    for i, text in enumerate(test_texts):
-        print(f"\n=== Test Text {i+1} ===")
-        print("Original:")
-        print(text)
-        print("\nConverted:")
-        converted = mapper.convert(text)
-        print(converted)
-        print("\n")
-    
+    # Convert and display each test case
+    for i, test in enumerate(test_cases, 1):
+        result = mapper.convert(test)
+        print(f"Test {i}: {test}")
+        print(f"Result: {result}")
+        print("-" * 80)
+
 if __name__ == "__main__":
-    main()
+    test_transliteration()
