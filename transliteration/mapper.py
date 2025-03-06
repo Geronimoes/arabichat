@@ -8,6 +8,22 @@ import json
 import logging
 from typing import Dict, List, Optional, Tuple, Set, Any
 
+# Import the fuzzy matching module
+try:
+    from transliteration.fuzzy_match import FuzzyMatcher
+    FUZZY_MATCHING_AVAILABLE = True
+except ImportError:
+    FUZZY_MATCHING_AVAILABLE = False
+    logging.warning("Fuzzy matching module not available. Fuzzy matching will be disabled.")
+
+# Import the Arabic utilities module
+try:
+    from transliteration.arabic_utils import ArabicProcessor
+    ARABIC_UTILS_AVAILABLE = True
+except ImportError:
+    ARABIC_UTILS_AVAILABLE = False
+    logging.warning("Arabic utilities module not available. Advanced Arabic processing will be disabled.")
+
 # Import the correction module (if available)
 try:
     from transliteration.corrections import TransliterationCorrector
@@ -29,14 +45,16 @@ class TransliterationMapper:
     Main class for handling transliteration from Arabic chat to Arabica system.
     """
     
-    def __init__(self, custom_mapping_path: Optional[str] = None):
+    def __init__(self, custom_mapping_path: Optional[str] = None, fuzzy_threshold: int = 85):
         """
         Initialize the mapper with the appropriate character mappings.
         
         Args:
             custom_mapping_path: Path to custom mapping files
+            fuzzy_threshold: Threshold for fuzzy matching (0-100)
         """
         self.logger = logging.getLogger(__name__)
+        self.fuzzy_threshold = fuzzy_threshold
         
         # Base mapping for Arabic chat to Arabica transliteration
         self.base_mapping = {
