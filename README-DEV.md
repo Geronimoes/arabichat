@@ -65,6 +65,7 @@ arabichat/
 ├── app.py                  # Main application entry point
 ├── config.py               # Configuration settings
 ├── requirements.txt        # Production dependencies
+├── requirements-minimal.txt # Dependencies without CAMeL Tools
 ├── requirements-dev.txt    # Development dependencies
 ├── static/                 # Static assets (CSS, JS, images)
 │   ├── css/
@@ -74,8 +75,17 @@ arabichat/
 ├── transliteration/        # Core transliteration functionality
 │   ├── __init__.py
 │   ├── mapper.py           # Character mapping logic
+│   ├── corrections.py      # Post-processing corrections
+│   ├── arabic_script.py    # Experimental Arabic script conversion
 │   ├── moroccan.py         # Moroccan dialect specific rules
-│   └── arabica.py          # Arabica transliteration system
+│   ├── mappings/           # JSON mapping files
+│   │   ├── moroccan.json   # Moroccan dialect mappings
+│   │   ├── common_words.json # Dictionary of common words
+│   │   └── foreign_words.json # List of words to preserve
+│   └── corrections/        # Correction files
+│       ├── word_corrections.json
+│       ├── pattern_corrections.json
+│       └── suffix_corrections.json
 └── tests/                  # Unit and integration tests
 ```
 

@@ -1,0 +1,15 @@
+{
+  "description": "Suffix-based corrections for transliterated text",
+  "corrections": {
+    "([^aeiouy])i\\b": "\\1ī",
+    "([^aeiouy])a\\b": "\\1ā",
+    "([^aeiouy])u\\b": "\\1ū",
+    "kom\\b": "kum",
+    "hom\\b": "hum",
+    "iya\\b": "iyā",
+    "iha\\b": "ihā",
+    "ihom\\b": "ihum",
+    "ihum\\b": "ihum",
+    "na\\b": "nā"
+  }
+}

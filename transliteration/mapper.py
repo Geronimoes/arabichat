@@ -8,6 +8,14 @@ import json
 import logging
 from typing import Dict, List, Optional, Tuple, Set, Any
 
+# Import the correction module (if available)
+try:
+    from transliteration.corrections import TransliterationCorrector
+    CORRECTIONS_AVAILABLE = True
+except ImportError:
+    CORRECTIONS_AVAILABLE = False
+    logging.warning("Correction module not available. Skipping correction pass.")
+
 # Try to import CAMeL Tools, but don't fail if not available
 try:
     from camel_tools.utils.charmap import CharMapper
@@ -120,6 +128,53 @@ class TransliterationMapper:
         # Initialize CAMeL Tools if available
         if CAMEL_TOOLS_AVAILABLE:
             self._init_camel_tools()
+            
+        # Initialize the corrector if available
+        self.corrector = None
+        if CORRECTIONS_AVAILABLE:
+            self.corrector = TransliterationCorrector()
+            self.logger.info("Initialized correction module")
+            
+        # Arabic script mapping (for converting from Arabica to Arabic script)
+        self.arabic_script_mapping = {
+            'ʾ': 'ء',
+            'ā': 'ا',
+            'a': 'َ',
+            'b': 'ب',
+            't': 'ت',
+            'ṯ': 'ث',
+            'ǧ': 'ج',
+            'ḥ': 'ح',
+            'ḫ': 'خ',
+            'd': 'د',
+            'ḏ': 'ذ',
+            'r': 'ر',
+            'z': 'ز',
+            's': 'س',
+            'š': 'ش',
+            'ṣ': 'ص',
+            'ḍ': 'ض',
+            'ṭ': 'ط',
+            'ẓ': 'ظ',
+            'ʿ': 'ع',
+            'ġ': 'غ',
+            'f': 'ف',
+            'q': 'ق',
+            'k': 'ك',
+            'l': 'ل',
+            'm': 'م',
+            'n': 'ن',
+            'h': 'ه',
+            'w': 'و',
+            'ū': 'و',
+            'u': 'ُ',
+            'y': 'ي',
+            'ī': 'ي',
+            'i': 'ِ',
+            'g': 'ج', # Moroccan specific
+            'e': 'ي', # Dialectal
+            'o': 'و'  # Dialectal
+        }
     
     def _init_camel_tools(self):
         """Initialize CAMeL Tools components."""
@@ -280,9 +335,15 @@ class TransliterationMapper:
             
         # Always use the fallback for now, CAMeL Tools integration will be added later
         # if CAMEL_TOOLS_AVAILABLE:
-        #     return self._convert_with_camel(text, dialect)
+        #     result = self._convert_with_camel(text, dialect)
         # else:
-        return self._convert_fallback(text, dialect)
+        result = self._convert_fallback(text, dialect)
+        
+        # Apply corrections if available
+        if self.corrector is not None:
+            result = self.corrector.apply_corrections(result)
+            
+        return result
     
     def _convert_with_camel(self, text: str, dialect: str) -> str:
         """

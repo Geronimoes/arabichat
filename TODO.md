@@ -14,6 +14,9 @@ This document outlines the planned development tasks for the ArabiChat project.
 - [x] Implement fallback character mapping system
 - [x] Create mapping from Arabic chat to Arabica transliteration
 - [x] Implement character mapping validation
+- [x] Add dictionary-based approach for common words
+- [x] Implement correction module for post-processing
+- [x] Add experimental Arabic script output
 - [ ] Add Docker setup for easier deployment
 
 ### CAMeL Tools Integration (Optional)
@@ -22,17 +25,21 @@ This document outlines the planned development tasks for the ArabiChat project.
 - [ ] Create mapping from Arabic script to Arabica transliteration
 
 ### Basic UI
-- [ ] Create simple input form for text conversion
-- [ ] Design conversion result display
-- [ ] Add copy-to-clipboard functionality
-- [ ] Implement basic error handling and user feedback
+- [x] Create simple input form for text conversion
+- [x] Design conversion result display
+- [x] Add copy-to-clipboard functionality
+- [x] Implement basic error handling and user feedback
+- [x] Add automatic conversion on paste
+- [x] Add Arabic script output display
 
 ## Phase 2: Enhanced Functionality and Moroccan Arabic Support
 
 ### Moroccan Dialect Support
-- [ ] Research and document Moroccan Arabic specific features
-- [ ] Implement Moroccan Arabic specific mapping rules
-- [ ] Create test cases for Moroccan Arabic dialect features
+- [x] Research and document Moroccan Arabic specific features
+- [x] Implement Moroccan Arabic specific mapping rules
+- [x] Create test cases for Moroccan Arabic dialect features
+- [x] Enhance common word dictionary with Moroccan terms
+- [x] Implement suffix handling for pronoun attachments
 - [ ] Add dialect detection functionality
 
 ### Customization Options
@@ -42,12 +49,25 @@ This document outlines the planned development tasks for the ArabiChat project.
 - [ ] Create preset examples for common conventions
 
 ### Validation and Error Handling
-- [ ] Improve input validation
-- [ ] Add suggestions for potential errors or ambiguities
-- [ ] Implement context-aware corrections
-- [ ] Create visual feedback for problematic conversions
+- [x] Improve input validation
+- [x] Add suggestions for potential errors or ambiguities
+- [x] Implement context-aware corrections
+- [x] Create visual feedback for problematic conversions
+- [ ] Implement a user feedback system for incorrect conversions
 
 ## Phase 3: Advanced Features and Refinement
+
+### NLP Integration (Potential Enhancements)
+- [ ] Integrate fuzzy matching with rapidfuzz for approximate dictionary lookups
+- [ ] Add pyarabic for improved Arabic text normalization
+- [ ] Explore NLTK or spaCy for morphological analysis
+- [ ] Create a hybrid approach combining rule-based and ML techniques
+
+### API Integration Options
+- [ ] Add LLM API fallback for unknown words (OpenAI/Anthropic/Mistral)
+- [ ] Implement caching for API responses to reduce costs
+- [ ] Create a feedback loop to improve dictionary based on API responses
+- [ ] Add configuration options for API usage (on/off, rate limits)
 
 ### Batch Processing
 - [ ] Implement file upload functionality

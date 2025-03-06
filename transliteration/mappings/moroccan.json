@@ -12,6 +12,9 @@
     "9": "q"
   },
   "patterns": [
+    {"pattern": "a-a", "replacement": "ā"},
+    {"pattern": "i-i", "replacement": "ī"},
+    {"pattern": "u-u", "replacement": "ū"},
     {"pattern": "ch", "replacement": "š"},
     {"pattern": "sh", "replacement": "š"},
     {"pattern": "th", "replacement": "ṯ"},

@@ -10,9 +10,12 @@ ArabiChat is designed to help scholars and students working with Arabic dialecta
 
 - Convert Arabic chat text to Arabica transliteration
 - Specialized support for Moroccan Arabic dialectal features
+- Dictionary-based approach for improved accuracy
+- Automatic correction of common errors and inconsistencies
+- Experimental Arabic script conversion
 - Customizable character mappings
 - Simple, easy-to-use web interface
-- Batch processing capabilities
+- Automatic conversion on paste
 
 ## Installation
 

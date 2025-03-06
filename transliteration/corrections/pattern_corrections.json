@@ -1,0 +1,12 @@
+{
+  "description": "Pattern-based corrections for transliterated text",
+  "corrections": [
+    {"pattern": "al (\\w)", "replacement": "al-\\1"},
+    {"pattern": "([aeiou])([aeiou])\\1", "replacement": "\\1\\2"},
+    {"pattern": "([^aeiou])([^aeiou])\\2", "replacement": "\\1\\2"},
+    {"pattern": "([^\\s-])-([^\\s-])", "replacement": "\\1-\\2"},
+    {"pattern": "ʿnd([aeiou])", "replacement": "ʿind\\1"},
+    {"pattern": "mn b([aeiou])", "replacement": "min b\\1"},
+    {"pattern": "(\\b[fkbw]) ([aeiou])", "replacement": "\\1ī \\2"}
+  ]
+}

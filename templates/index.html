@@ -30,7 +30,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control" id="input-text" rows="10" placeholder="Enter Arabic chat text here..."></textarea>
+                    <textarea class="form-control" id="input-text" rows="10" placeholder="Enter Arabic chat text here..." onpaste="setTimeout(convertOnPaste, 10)"></textarea>
                 </div>
             </div>
             <div class="card-footer">
@@ -104,6 +104,24 @@
                         <textarea class="form-control" id="output-text" rows="10" readonly></textarea>
                     </div>
                 </div>
+                
+                <!-- Arabic Script Output (Experimental) -->
+                <div class="mt-3">
+                    <h6 class="d-flex justify-content-between align-items-center">
+                        Arabic Script (Experimental)
+                        <button class="btn btn-sm btn-outline-secondary" id="copy-arabic">
+                            <i class="far fa-copy"></i> Copy
+                        </button>
+                    </h6>
+                    <div class="alert alert-info" role="alert" id="arabic-script-notice">
+                        <i class="fas fa-info-circle"></i> Arabic script conversion is experimental and may not be accurate.
+                    </div>
+                    <div id="arabic-script-container" style="display: none;">
+                        <div class="form-group" dir="rtl"> <!-- Right-to-left for Arabic -->
+                            <textarea class="form-control" id="arabic-script-text" rows="10" readonly style="font-size: 1.2rem; font-family: 'Traditional Arabic', Arial, sans-serif;"></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-footer text-muted">
                 <div id="status-message"></div>
@@ -133,59 +151,84 @@
 
 {% block scripts %}
 <script>
+    function convertOnPaste() {
+        const inputText = $('#input-text').val();
+        if (inputText.trim()) {
+            convertText();
+        }
+    }
+    
+    function convertText() {
+        const inputText = $('#input-text').val();
+        const dialect = $('#dialect').val();
+        
+        if (!inputText.trim()) {
+            $('#status-message').html('<span class="text-warning">Please enter some text to convert</span>');
+            return;
+        }
+        
+        // Show loading state
+        $('#convert-btn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Converting...');
+        $('#convert-btn').prop('disabled', true);
+        
+        // Send conversion request
+        $.ajax({
+            url: '/convert',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                text: inputText,
+                dialect: dialect
+            }),
+            success: function(response) {
+                if (response.status === 'success') {
+                // Show Arabica output
+                $('#empty-result-notice').hide();
+                $('#output-container').show();
+                $('#output-text').val(response.result);
+                
+                    // Handle Arabic script output if available
+                        if (response.arabic_script) {
+                            $('#arabic-script-notice').hide();
+                            $('#arabic-script-container').show();
+                            $('#arabic-script-text').val(response.arabic_script);
+                        } else {
+                            $('#arabic-script-notice').show();
+                            $('#arabic-script-container').hide();
+                        }
+                        
+                        $('#status-message').html('<span class="text-success">Conversion completed successfully</span>');
+                    } else {
+                    $('#status-message').html('<span class="text-danger">Error: ' + response.message + '</span>');
+                }
+            },
+            error: function(xhr) {
+                let errorMsg = 'An error occurred during conversion';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                $('#status-message').html('<span class="text-danger">Error: ' + errorMsg + '</span>');
+            },
+            complete: function() {
+                // Reset button state
+                $('#convert-btn').html('<i class="fas fa-sync-alt"></i> Convert to Arabica');
+                $('#convert-btn').prop('disabled', false);
+            }
+        });
+    }
+    
     $(document).ready(function() {
         // Convert button click handler
         $('#convert-btn').click(function() {
-            const inputText = $('#input-text').val();
-            const dialect = $('#dialect').val();
-            
-            if (!inputText.trim()) {
-                $('#status-message').html('<span class="text-warning">Please enter some text to convert</span>');
-                return;
-            }
-            
-            // Show loading state
-            $('#convert-btn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Converting...');
-            $('#convert-btn').prop('disabled', true);
-            
-            // Send conversion request
-            $.ajax({
-                url: '/convert',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    text: inputText,
-                    dialect: dialect
-                }),
-                success: function(response) {
-                    if (response.status === 'success') {
-                        // Show output
-                        $('#empty-result-notice').hide();
-                        $('#output-container').show();
-                        $('#output-text').val(response.result);
-                        $('#status-message').html('<span class="text-success">Conversion completed successfully</span>');
-                    } else {
-                        $('#status-message').html('<span class="text-danger">Error: ' + response.message + '</span>');
-                    }
-                },
-                error: function(xhr) {
-                    let errorMsg = 'An error occurred during conversion';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMsg = xhr.responseJSON.message;
-                    }
-                    $('#status-message').html('<span class="text-danger">Error: ' + errorMsg + '</span>');
-                },
-                complete: function() {
-                    // Reset button state
-                    $('#convert-btn').html('<i class="fas fa-sync-alt"></i> Convert to Arabica');
-                    $('#convert-btn').prop('disabled', false);
-                }
-            });
+            convertText();
         });
         
         // Clear input button
         $('#clear-input').click(function() {
             $('#input-text').val('');
+            $('#output-text').val('');
+            $('#empty-result-notice').show();
+            $('#output-container').hide();
             $('#input-text').focus();
         });
         
@@ -207,6 +250,37 @@
                 }, 2000);
             });
         });
+        
+        // Copy Arabic script button
+        $('#copy-arabic').click(function() {
+            const arabicText = $('#arabic-script-text').val();
+            if (!arabicText.trim()) {
+                return;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(arabicText).then(function() {
+                // Show temporary success message
+                const originalText = $('#copy-arabic').html();
+                $('#copy-arabic').html('<i class="fas fa-check"></i> Copied!');
+                
+                setTimeout(function() {
+                    $('#copy-arabic').html(originalText);
+                }, 2000);
+            });
+        });
+    });
+    
+    // Handle paste event for automatic conversion
+    $('#input-text').on('paste', function(e) {
+        // Give a small delay to allow the paste to complete
+        setTimeout(function() {
+            const pastedText = $('#input-text').val();
+            if (pastedText.trim()) {
+                // Trigger the conversion automatically
+                $('#convert-btn').click();
+            }
+        }, 100);
     });
 </script>
 {% endblock %}

@@ -8,6 +8,14 @@ import logging
 from datetime import datetime
 from transliteration.mapper import TransliterationMapper
 
+# Import Arabic script conversion (experimental)
+try:
+    from transliteration.arabic_script import to_arabic_script
+    ARABIC_SCRIPT_AVAILABLE = True
+except ImportError:
+    ARABIC_SCRIPT_AVAILABLE = False
+    logging.warning("Arabic script conversion not available.")
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
@@ -36,9 +44,19 @@ def convert():
     
     try:
         result = mapper.convert(text, dialect=dialect)
+        
+        # Add Arabic script conversion if available
+        arabic_script = None
+        if ARABIC_SCRIPT_AVAILABLE:
+            try:
+                arabic_script = to_arabic_script(result)
+            except Exception as e:
+                app.logger.warning(f"Arabic script conversion error: {str(e)}")
+                
         return jsonify({
             'status': 'success',
-            'result': result
+            'result': result,
+            'arabic_script': arabic_script
         })
     except Exception as e:
         app.logger.error(f"Conversion error: {str(e)}")
