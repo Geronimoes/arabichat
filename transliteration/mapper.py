@@ -210,7 +210,7 @@ class TransliterationMapper:
         """Initialize CAMeL Tools components."""
         # This is a placeholder for now - we'll implement actual CAMeL Tools initialization
         # when we get to that phase of development
-        self.logger.info("Initializing CAMeL Tools components")
+        pass
         
     def _load_dialect_mappings(self, custom_path: Optional[str] = None):
         """
@@ -475,13 +475,19 @@ class TransliterationMapper:
                 
             i += 1
         
-        # Join the results
+        # Join the results and normalize spaces
         result = ''.join(result_tokens)
         
         # Post-processing for specific Arabica rules
         
+        # Fix spacing around punctuation
+        result = re.sub(r'\s+([,.?!;:])', r'\1', result)
+        
         # Handle definite article (al-)
         result = re.sub(r'\bal[ -]([a-zA-Z])', r'al-\1', result)
+        
+        # Fix spacing with al-
+        result = re.sub(r'al\s*-\s*', r'al-', result)  # Remove spaces around hyphen in al-
         
         # Handle taa marbutah
         result = re.sub(r'a_t\b', 'a', result)  # End of word

@@ -59,16 +59,41 @@ class FuzzyMatcher:
         
         try:
             # Find the closest match
-            match = process.extractOne(
+            result = process.extractOne(
                 word.lower(),
                 list(dictionary.keys()),
                 scorer=fuzz.ratio,
                 score_cutoff=threshold
             )
             
-            if match:
-                matched_key, score = match
-                return matched_key, dictionary[matched_key], score
+            if result is not None:
+                # Different versions of rapidfuzz return different formats
+                
+                # Handle 3-element tuple (match, score, index)
+                if isinstance(result, tuple) and len(result) == 3:
+                    matched_key, score, _ = result
+                    return matched_key, dictionary[matched_key], score
+                    
+                # Handle 2-element tuple (match, score)
+                elif isinstance(result, tuple) and len(result) == 2:
+                    matched_key, score = result
+                    return matched_key, dictionary[matched_key], score
+                    
+                # Handle Match object
+                elif hasattr(result, 'match') and hasattr(result, 'score'):
+                    matched_key = result.match
+                    score = result.score
+                    return matched_key, dictionary[matched_key], score
+                
+                # Log unexpected format and try to extract what we can
+                else:
+                    self.logger.warning(f"Unexpected result format from rapidfuzz: {result}")
+                    # Try to extract information in a best-effort way
+                    if isinstance(result, tuple) and len(result) > 0:
+                        matched_key = result[0]
+                        if isinstance(matched_key, str) and matched_key in dictionary:
+                            return matched_key, dictionary[matched_key], 0
+                    return None, None, None
             
             return None, None, None
             
@@ -101,7 +126,7 @@ class FuzzyMatcher:
         
         try:
             # Find multiple matches
-            matches = process.extract(
+            results = process.extract(
                 word.lower(),
                 list(dictionary.keys()),
                 scorer=fuzz.ratio,
@@ -109,8 +134,34 @@ class FuzzyMatcher:
                 limit=limit
             )
             
-            if matches:
-                return [(key, dictionary[key], score) for key, score in matches]
+            if results:
+                # Handle different return formats based on rapidfuzz version
+                matched_results = []
+                
+                for result in results:
+                    # Handle 3-element tuple (key, score, index)
+                    if isinstance(result, tuple) and len(result) == 3:
+                        key, score, _ = result
+                        if key in dictionary:
+                            matched_results.append((key, dictionary[key], score))
+                    # Handle 2-element tuple (key, score) format
+                    elif isinstance(result, tuple) and len(result) == 2:
+                        key, score = result
+                        if key in dictionary:
+                            matched_results.append((key, dictionary[key], score))
+                    # Handle Match object format
+                    elif hasattr(result, 'match') and hasattr(result, 'score'):
+                        key = result.match
+                        score = result.score
+                        if key in dictionary:
+                            matched_results.append((key, dictionary[key], score))
+                    # Try to handle other formats
+                    elif isinstance(result, tuple) and len(result) > 0:
+                        key = result[0]
+                        if isinstance(key, str) and key in dictionary:
+                            matched_results.append((key, dictionary[key], 0))
+                    
+                return matched_results
             
             return []
             
@@ -154,23 +205,19 @@ class FuzzyMatcher:
         if not word or not dictionary:
             return None
             
-        threshold = threshold if threshold is not None else self.default_threshold
+        # Simple implementation that's more robust
+        best_score = 0
+        best_match = None
+        word_lower = word.lower()
         
-        try:
-            # Use token sort ratio for phrases
-            match = process.extractOne(
-                word.lower(),
-                list(dictionary.keys()),
-                scorer=fuzz.token_sort_ratio,
-                score_cutoff=threshold
-            )
+        # Use regular ratio comparison but compare with all keys
+        for key in dictionary.keys():
+            score = fuzz.ratio(word_lower, key.lower())
+            if score > best_score and score >= (threshold or self.default_threshold):
+                best_score = score
+                best_match = key
+                
+        if best_match:
+            return dictionary[best_match]
             
-            if match:
-                matched_key, _ = match
-                return dictionary[matched_key]
-            
-            return None
-            
-        except Exception as e:
-            self.logger.error(f"Error in token fuzzy matching: {str(e)}")
-            return None
+        return None

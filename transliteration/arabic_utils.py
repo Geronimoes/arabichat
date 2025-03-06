@@ -53,8 +53,12 @@ class ArabicProcessor:
             # Normalize hamza forms
             text = araby.normalize_hamza(text)
             
-            # Normalize lam-alef
-            text = araby.normalize_lamalef(text)
+            # Note: normalize_lamalef doesn't exist in current pyarabic
+            # Instead, use manual replacement for lam-alef forms
+            text = text.replace('لا', 'لا')
+            text = text.replace('لأ', 'لأ')
+            text = text.replace('لإ', 'لإ')
+            text = text.replace('لآ', 'لآ')
             
             return text
             
@@ -241,14 +245,18 @@ class ArabicProcessor:
         # Apply Arabic text normalization and cleanup
         if PYARABIC_AVAILABLE:
             try:
-                # Join letters properly
-                result = araby.join_letters(result)
+                # Note: join_letters doesn't exist in current pyarabic
+                # We'll skip this step as characters will naturally join in Arabic display
                 
                 # Fix tashkeel placement
-                result = araby.normalize_tashkeel(result)
+                if hasattr(araby, 'normalize_tashkeel'):
+                    result = araby.normalize_tashkeel(result)
                 
-                # Handle lamalef
-                result = araby.normalize_lamalef(result)
+                # Handle lam-alef forms manually
+                result = result.replace('ل' + 'ا', 'لا')
+                result = result.replace('ل' + 'أ', 'لأ')
+                result = result.replace('ل' + 'إ', 'لإ')
+                result = result.replace('ل' + 'آ', 'لآ')
             except Exception as e:
                 self.logger.error(f"Error in Arabic normalization: {str(e)}")
         

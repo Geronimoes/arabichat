@@ -2,9 +2,13 @@
 Test script to demonstrate the integration of rapidfuzz and pyarabic.
 """
 
+import logging
 from transliteration.mapper import TransliterationMapper
 from transliteration.fuzzy_match import FuzzyMatcher, RAPIDFUZZ_AVAILABLE
 from transliteration.arabic_utils import ArabicProcessor, PYARABIC_AVAILABLE
+
+# Set up minimal logging - only show warnings and above
+logging.basicConfig(level=logging.WARNING)
 
 def test_fuzzy_matching():
     """Test fuzzy matching with rapidfuzz."""

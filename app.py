@@ -16,8 +16,11 @@ except ImportError:
     ARABIC_SCRIPT_AVAILABLE = False
     logging.warning("Arabic script conversion not available.")
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging
+logging.basicConfig(
+    level=logging.WARNING,  # Only show warnings and errors in production
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
