@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+
+{% block title %}ArabiChat - Help & Documentation{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>ArabiChat Documentation</h1>
+        <p class="lead">Learn how to use ArabiChat and understand the transliteration process</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="list-group sticky-top" style="top: 20px;">
+            <a class="list-group-item list-group-item-action" href="#getting-started">Getting Started</a>
+            <a class="list-group-item list-group-item-action" href="#arabica-system">The Arabica System</a>
+            <a class="list-group-item list-group-item-action" href="#chat-alphabet">Arabic Chat Alphabet</a>
+            <a class="list-group-item list-group-item-action" href="#moroccan-dialect">Moroccan Arabic Features</a>
+            <a class="list-group-item list-group-item-action" href="#conversion-rules">Conversion Rules</a>
+            <a class="list-group-item list-group-item-action" href="#troubleshooting">Troubleshooting</a>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="card mb-4" id="getting-started">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Getting Started</h2>
+            </div>
+            <div class="card-body">
+                <h3 class="h6">Basic Usage</h3>
+                <ol>
+                    <li>Enter your Arabic chat text in the input field</li>
+                    <li>Select the appropriate dialect (currently Moroccan Arabic)</li>
+                    <li>Click "Convert to Arabica" to see the academic transliteration</li>
+                    <li>Use the "Copy" button to copy the transliteration to your clipboard</li>
+                </ol>
+                
+                <h3 class="h6">Example</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-header">Arabic Chat Input</div>
+                            <div class="card-body">
+                                <code>mar7aba, kayf 7alek?</code>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-header">Arabica Transliteration</div>
+                            <div class="card-body">
+                                <code>marḥaba, kayf ḥalek?</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4" id="arabica-system">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">The Arabica System</h2>
+            </div>
+            <div class="card-body">
+                <p>The Arabica transliteration system is used when a very strict transliteration of Arabic into Latin characters is required. In this system, each Arabic consonant corresponds to a specific Latin letter, sometimes with diacritical marks.</p>
+                
+                <h3 class="h6">Key Principles</h3>
+                <ul>
+                    <li>Orthography is prioritized over pronunciation</li>
+                    <li>Solar letters are transcribed without assimilation</li>
+                    <li>Diacritical marks are used to distinguish between similar consonants</li>
+                </ul>
+                
+                <h3 class="h6">Complete Character Mapping</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Arabic</th>
+                                <th>Arabica</th>
+                                <th>Arabic</th>
+                                <th>Arabica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ا</td>
+                                <td>ā</td>
+                                <td>ض</td>
+                                <td>ḍ</td>
+                            </tr>
+                            <tr>
+                                <td>ب</td>
+                                <td>b</td>
+                                <td>ط</td>
+                                <td>ṭ</td>
+                            </tr>
+                            <tr>
+                                <td>ت</td>
+                                <td>t</td>
+                                <td>ظ</td>
+                                <td>ẓ</td>
+                            </tr>
+                            <tr>
+                                <td>ث</td>
+                                <td>ṯ</td>
+                                <td>ع</td>
+                                <td>ʿ</td>
+                            </tr>
+                            <tr>
+                                <td>ج</td>
+                                <td>ǧ</td>
+                                <td>غ</td>
+                                <td>ġ</td>
+                            </tr>
+                            <tr>
+                                <td>ح</td>
+                                <td>ḥ</td>
+                                <td>ف</td>
+                                <td>f</td>
+                            </tr>
+                            <tr>
+                                <td>خ</td>
+                                <td>ḫ</td>
+                                <td>ق</td>
+                                <td>q</td>
+                            </tr>
+                            <tr>
+                                <td>د</td>
+                                <td>d</td>
+                                <td>ك</td>
+                                <td>k</td>
+                            </tr>
+                            <tr>
+                                <td>ذ</td>
+                                <td>ḏ</td>
+                                <td>ل</td>
+                                <td>l</td>
+                            </tr>
+                            <tr>
+                                <td>ر</td>
+                                <td>r</td>
+                                <td>م</td>
+                                <td>m</td>
+                            </tr>
+                            <tr>
+                                <td>ز</td>
+                                <td>z</td>
+                                <td>ن</td>
+                                <td>n</td>
+                            </tr>
+                            <tr>
+                                <td>س</td>
+                                <td>s</td>
+                                <td>ه</td>
+                                <td>h</td>
+                            </tr>
+                            <tr>
+                                <td>ش</td>
+                                <td>š</td>
+                                <td>و</td>
+                                <td>w</td>
+                            </tr>
+                            <tr>
+                                <td>ص</td>
+                                <td>ṣ</td>
+                                <td>ي</td>
+                                <td>y</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3 class="h6">Vowels</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Long Vowels</th>
+                                <th colspan="2">Short Vowels</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ا</td>
+                                <td>ā</td>
+                                <td>فَتحة</td>
+                                <td>a</td>
+                            </tr>
+                            <tr>
+                                <td>ي</td>
+                                <td>ī</td>
+                                <td>كَسرة</td>
+                                <td>i</td>
+                            </tr>
+                            <tr>
+                                <td>و</td>
+                                <td>ū</td>
+                                <td>ضَمّة</td>
+                                <td>u</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4" id="chat-alphabet">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Arabic Chat Alphabet</h2>
+            </div>
+            <div class="card-body">
+                <p>The Arabic chat alphabet (also known as Arabizi, Franco-Arabic, or Arabish) is an informal way of writing Arabic using Latin characters and numbers. It's commonly used in digital communication like text messages, social media, and online chat.</p>
+                
+                <h3 class="h6">Common Number-to-Letter Mappings</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Number</th>
+                                <th>Represents</th>
+                                <th>Arabic Letter</th>
+                                <th>Arabica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2</td>
+                                <td>Glottal stop</td>
+                                <td>ء</td>
+                                <td>ʾ</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Voiced pharyngeal fricative</td>
+                                <td>ع</td>
+                                <td>ʿ</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Voiceless pharyngeal fricative</td>
+                                <td>خ</td>
+                                <td>ḫ</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Emphatic T (in some systems)</td>
+                                <td>ط</td>
+                                <td>ṭ</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Voiceless pharyngeal fricative</td>
+                                <td>ح</td>
+                                <td>ḥ</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Voiceless uvular stop (in some systems)</td>
+                                <td>ق</td>
+                                <td>q</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Emphatic S (in some systems)</td>
+                                <td>ص</td>
+                                <td>ṣ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3 class="h6">Common Letter Combinations</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Chat</th>
+                                <th>Arabic Letter</th>
+                                <th>Arabica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>sh/ch</td>
+                                <td>ش</td>
+                                <td>š</td>
+                            </tr>
+                            <tr>
+                                <td>th</td>
+                                <td>ث</td>
+                                <td>ṯ</td>
+                            </tr>
+                            <tr>
+                                <td>dh</td>
+                                <td>ذ</td>
+                                <td>ḏ</td>
+                            </tr>
+                            <tr>
+                                <td>gh</td>
+                                <td>غ</td>
+                                <td>ġ</td>
+                            </tr>
+                            <tr>
+                                <td>kh</td>
+                                <td>خ</td>
+                                <td>ḫ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4" id="moroccan-dialect">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Moroccan Arabic Features</h2>
+            </div>
+            <div class="card-body">
+                <p>Moroccan Arabic (Darija) has several distinctive features that may affect transliteration:</p>
+                
+                <h3 class="h6">Pronunciation Differences</h3>
+                <ul>
+                    <li>The letter ق (qāf) is often pronounced as "g" in many Moroccan dialects</li>
+                    <li>Short vowels are often reduced or omitted</li>
+                    <li>Influenced by Berber, French, and Spanish, with many loanwords</li>
+                </ul>
+                
+                <h3 class="h6">Chat Conventions</h3>
+                <p>Common conventions in Moroccan Arabic chat include:</p>
+                <ul>
+                    <li>Using "g" for both ج and ق depending on pronunciation</li>
+                    <li>Using "ch" for ش (influenced by French)</li>
+                    <li>Including French and Spanish loanwords with "p" and "v" sounds</li>
+                </ul>
+                
+                <h3 class="h6">Examples</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Moroccan Chat</th>
+                                <th>Arabica</th>
+                                <th>English</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ch7al</td>
+                                <td>šḥal</td>
+                                <td>How much</td>
+                            </tr>
+                            <tr>
+                                <td>goul</td>
+                                <td>gūl</td>
+                                <td>Say (where ق is pronounced as g)</td>
+                            </tr>
+                            <tr>
+                                <td>wa5a</td>
+                                <td>waḫa</td>
+                                <td>Okay</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4" id="conversion-rules">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Conversion Rules</h2>
+            </div>
+            <div class="card-body">
+                <p>ArabiChat applies several rules when converting Arabic chat to Arabica transliteration:</p>
+                
+                <h3 class="h6">Character Mapping</h3>
+                <ul>
+                    <li>Numbers and letter combinations are mapped to their Arabica equivalents</li>
+                    <li>Repeated vowels (e.g., "aa") are converted to long vowels (ā)</li>
+                    <li>Capital letters may be used to indicate emphatic consonants (e.g., "S" for ص)</li>
+                </ul>
+                
+                <h3 class="h6">Special Rules</h3>
+                <ul>
+                    <li>The definite article is always written as "al-" and connected with a hyphen</li>
+                    <li>The tāʾ marbūṭa is rendered as "a" at the end of words, but "at" in construct state</li>
+                    <li>Sun letters are not assimilated in the transliteration</li>
+                </ul>
+                
+                <h3 class="h6">Examples</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Rule</th>
+                                <th>Chat Example</th>
+                                <th>Arabica Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Definite Article</td>
+                                <td>al shams</td>
+                                <td>al-šams</td>
+                            </tr>
+                            <tr>
+                                <td>Tāʾ Marbūṭa</td>
+                                <td>madina_t al maghrib</td>
+                                <td>madīnat al-maġrib</td>
+                            </tr>
+                            <tr>
+                                <td>Long Vowels</td>
+                                <td>kitaab</td>
+                                <td>kitāb</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4" id="troubleshooting">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Troubleshooting</h2>
+            </div>
+            <div class="card-body">
+                <h3 class="h6">Common Issues</h3>
+                
+                <div class="accordion" id="accordionTroubleshooting">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                Incorrect Character Conversion
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionTroubleshooting">
+                            <div class="accordion-body">
+                                <p><strong>Problem:</strong> Some characters are not being converted correctly.</p>
+                                <p><strong>Solution:</strong> Check if you're using non-standard chat conventions. Try using a more standardized representation:</p>
+                                <ul>
+                                    <li>Use "3" for ع instead of a different number</li>
+                                    <li>Use "7" for ح instead of a different number</li>
+                                    <li>Capitalize emphatic consonants (T for ط, S for ص, etc.)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                Missing Vowels
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionTroubleshooting">
+                            <div class="accordion-body">
+                                <p><strong>Problem:</strong> Short vowels are missing in the output.</p>
+                                <p><strong>Solution:</strong> Add explicit vowels in your chat text:</p>
+                                <ul>
+                                    <li>Use "a", "i", and "u" for short vowels</li>
+                                    <li>Use "aa", "ii", and "uu" for long vowels</li>
+                                    <li>Be explicit about vowels that might be ambiguous in chat language</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                Ambiguous Dialectal Features
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionTroubleshooting">
+                            <div class="accordion-body">
+                                <p><strong>Problem:</strong> Certain dialectal features are not transliterated correctly.</p>
+                                <p><strong>Solution:</strong> Be explicit about dialectal features:</p>
+                                <ul>
+                                    <li>Use "g" for the Moroccan pronunciation of ق</li>
+                                    <li>Use "q" when you want to represent the standard Arabic ق</li>
+                                    <li>Consider adding notes or annotations for particularly ambiguous cases</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="h6 mt-4">Getting Help</h3>
+                <p>If you encounter issues not covered here, you can:</p>
+                <ul>
+                    <li>Check the <a href="https://github.com/yourusername/arabichat" target="_blank">GitHub repository</a> for updates and known issues</li>
+                    <li>Submit an issue on GitHub with a detailed description of the problem</li>
+                    <li>Include examples of the text that's causing problems</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

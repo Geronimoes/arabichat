@@ -1,0 +1,53 @@
+{
+  "name": "Moroccan Arabic",
+  "description": "Mapping for Moroccan Arabic dialect features based on the Arabica transliteration system",
+  "mappings": {
+    "g": "g",
+    "v": "v",
+    "p": "p",
+    "2": "ʾ",
+    "3": "ʿ",
+    "5": "ḫ",
+    "7": "ḥ",
+    "9": "q",
+    "D": "ḍ",
+    "S": "ṣ",
+    "T": "ṭ",
+    "Z": "ẓ"
+  },
+  "patterns": [
+    {"pattern": "sh", "replacement": "š"},
+    {"pattern": "ch", "replacement": "š"},
+    {"pattern": "th", "replacement": "ṯ"},
+    {"pattern": "dh", "replacement": "ḏ"},
+    {"pattern": "gh", "replacement": "ġ"},
+    {"pattern": "kh", "replacement": "ḫ"},
+    {"pattern": "aa", "replacement": "ā"},
+    {"pattern": "ee", "replacement": "ī"},
+    {"pattern": "ii", "replacement": "ī"},
+    {"pattern": "oo", "replacement": "ū"},
+    {"pattern": "uu", "replacement": "ū"}
+  ],
+  "specialRules": [
+    {
+      "description": "Definite article",
+      "pattern": "\\bal[ -]([a-zA-Z])",
+      "replacement": "al-$1"
+    },
+    {
+      "description": "Taa marbutah at end of word",
+      "pattern": "a_t\\b",
+      "replacement": "a"
+    },
+    {
+      "description": "Taa marbutah in construct state",
+      "pattern": "a_t ([\\w])",
+      "replacement": "at $1"
+    }
+  ],
+  "notes": [
+    "Moroccan Arabic often pronounces ق (qaf) as g, which is preserved in the transliteration",
+    "French and Spanish loanwords may include sounds like p and v which are kept in the transliteration",
+    "The Arabica system represents emphatic consonants with dots below the letter"
+  ]
+}

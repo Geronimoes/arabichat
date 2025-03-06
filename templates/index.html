@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}ArabiChat - Convert Arabic Chat to Academic Transliteration{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center mb-4">
+        <h1>ArabiChat</h1>
+        <p class="lead">Convert Arabic chat text to academic transliteration using the Arabica system</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Arabic Chat Input</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" id="clear-input">
+                        <i class="fas fa-eraser"></i> Clear
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label for="dialect" class="form-label">Dialect:</label>
+                    <select class="form-select" id="dialect">
+                        <option value="moroccan" selected>Moroccan Arabic</option>
+                        <!-- Add more dialects as they become available -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="input-text" rows="10" placeholder="Enter Arabic chat text here..."></textarea>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary w-100" id="convert-btn">
+                    <i class="fas fa-sync-alt"></i> Convert to Arabica
+                </button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Quick Reference</h5>
+            </div>
+            <div class="card-body">
+                <p>Common Arabic chat characters:</p>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <th>Chat</th>
+                            <th>Arabica</th>
+                            <th>Arabic</th>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>ʾ</td>
+                            <td>ء</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>ʿ</td>
+                            <td>ع</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>ḥ</td>
+                            <td>ح</td>
+                        </tr>
+                        <tr>
+                            <td>5/kh</td>
+                            <td>ḫ</td>
+                            <td>خ</td>
+                        </tr>
+                        <tr>
+                            <td>T</td>
+                            <td>ṭ</td>
+                            <td>ط</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><a href="{{ url_for('help_page') }}">View complete reference guide</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Arabica Transliteration</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" id="copy-output">
+                        <i class="far fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert" id="empty-result-notice">
+                    <i class="fas fa-info-circle"></i> Your transliteration will appear here after conversion.
+                </div>
+                <div id="output-container" style="display: none;">
+                    <div class="form-group">
+                        <textarea class="form-control" id="output-text" rows="10" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                <div id="status-message"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">About the Arabica System</h5>
+            </div>
+            <div class="card-body">
+                <p>The Arabica transliteration system is used for strict transliteration of Arabic into Latin characters. Each Arabic consonant corresponds to a specific Latin letter, sometimes with diacritical marks.</p>
+                
+                <p>Key features:</p>
+                <ul>
+                    <li>Preserves orthography over pronunciation</li>
+                    <li>Represents sun letters without assimilation</li>
+                    <li>Uses diacritics to distinguish between similar consonants</li>
+                </ul>
+                
+                <p><a href="{{ url_for('help_page') }}">Learn more about the Arabica system</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Convert button click handler
+        $('#convert-btn').click(function() {
+            const inputText = $('#input-text').val();
+            const dialect = $('#dialect').val();
+            
+            if (!inputText.trim()) {
+                $('#status-message').html('<span class="text-warning">Please enter some text to convert</span>');
+                return;
+            }
+            
+            // Show loading state
+            $('#convert-btn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Converting...');
+            $('#convert-btn').prop('disabled', true);
+            
+            // Send conversion request
+            $.ajax({
+                url: '/convert',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    text: inputText,
+                    dialect: dialect
+                }),
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Show output
+                        $('#empty-result-notice').hide();
+                        $('#output-container').show();
+                        $('#output-text').val(response.result);
+                        $('#status-message').html('<span class="text-success">Conversion completed successfully</span>');
+                    } else {
+                        $('#status-message').html('<span class="text-danger">Error: ' + response.message + '</span>');
+                    }
+                },
+                error: function(xhr) {
+                    let errorMsg = 'An error occurred during conversion';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                    $('#status-message').html('<span class="text-danger">Error: ' + errorMsg + '</span>');
+                },
+                complete: function() {
+                    // Reset button state
+                    $('#convert-btn').html('<i class="fas fa-sync-alt"></i> Convert to Arabica');
+                    $('#convert-btn').prop('disabled', false);
+                }
+            });
+        });
+        
+        // Clear input button
+        $('#clear-input').click(function() {
+            $('#input-text').val('');
+            $('#input-text').focus();
+        });
+        
+        // Copy output button
+        $('#copy-output').click(function() {
+            const outputText = $('#output-text').val();
+            if (!outputText.trim()) {
+                return;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(outputText).then(function() {
+                // Show temporary success message
+                const originalText = $('#copy-output').html();
+                $('#copy-output').html('<i class="fas fa-check"></i> Copied!');
+                
+                setTimeout(function() {
+                    $('#copy-output').html(originalText);
+                }, 2000);
+            });
+        });
+    });
+</script>
+{% endblock %}
